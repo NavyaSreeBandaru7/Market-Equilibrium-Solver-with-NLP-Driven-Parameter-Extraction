@@ -8,13 +8,13 @@ import pandas as pd
 
 import spacy
 
- 
+
 
 # Load NLP model
 
 nlp = spacy.load("en_core_web_sm")
 
- 
+
 
 def extract_equation_params(text):
 
@@ -28,23 +28,22 @@ def extract_equation_params(text):
 
     numbers = [float(token.text) for token in doc if token.like_num]
 
- 
+
 
     if len(numbers) < 14:
 
         return None
 
- 
 
-    demand_intercept_corn, demand_slope_corn, supply_intercept_corn, supply_slope_corn, 
 
-    supply_intercept_prod_pay, supply_slope_prod_pay, 
+    demand_intercept_corn, demand_slope_corn, supply_intercept_corn, supply_slope_corn, \
+
+    supply_intercept_prod_pay, supply_slope_prod_pay, \
 
     demand_intercept_cleaned, demand_slope_cleaned, supply_intercept_cleaned, supply_slope_cleaned, \
 
     demand_intercept_no_loading, demand_slope_no_loading, supply_intercept_no_loading, supply_slope_no_loading = numbers[:14]
 
- 
 
     demand_slope_corn = -abs(demand_slope_corn)
 
@@ -52,7 +51,7 @@ def extract_equation_params(text):
 
     demand_slope_no_loading = -abs(demand_slope_no_loading)
 
- 
+
 
     return demand_intercept_corn, demand_slope_corn, supply_intercept_corn, supply_slope_corn, \
 
@@ -62,7 +61,7 @@ def extract_equation_params(text):
 
            demand_intercept_no_loading, demand_slope_no_loading, supply_intercept_no_loading, supply_slope_no_loading
 
- 
+
 
 def calculate_equilibrium(demand_intercept, demand_slope, supply_intercept, supply_slope):
 
@@ -78,7 +77,7 @@ def calculate_equilibrium(demand_intercept, demand_slope, supply_intercept, supp
 
     price_eq = demand_intercept + demand_slope * quantity_eq
 
- 
+
 
     cs_eq = (demand_intercept - price_eq) * quantity_eq / 2
 
@@ -86,11 +85,11 @@ def calculate_equilibrium(demand_intercept, demand_slope, supply_intercept, supp
 
     sw_eq = cs_eq + ps_eq
 
- 
+
 
     return round(quantity_eq, 2), round(price_eq, 2), round(cs_eq, 2), round(ps_eq, 2), round(sw_eq, 2)
 
- 
+
 
 def plot_market(demand_intercept, demand_slope, supply_intercept, supply_slope, quantity_eq, price_eq, market_name,
 
@@ -110,7 +109,7 @@ def plot_market(demand_intercept, demand_slope, supply_intercept, supply_slope, 
 
     supply_curve_alt = supply_intercept_alt + supply_slope_alt * q_range if supply_intercept_alt is not None else None
 
- 
+
 
     plt.figure(figsize=(8, 6))
 
@@ -122,7 +121,7 @@ def plot_market(demand_intercept, demand_slope, supply_intercept, supply_slope, 
 
         plt.plot(q_range, supply_curve_alt, label="Supply Curve (Alternative)", color="red", linestyle="dashed")
 
-   
+
 
     plt.xlabel("Quantity")
 
@@ -134,25 +133,25 @@ def plot_market(demand_intercept, demand_slope, supply_intercept, supply_slope, 
 
     st.pyplot(plt)
 
- 
+
 
 # Streamlit Interface
 
 st.title("Market Equilibrium Solver")
 
- 
+
 
 st.write("Enter supply and demand equations for corn and water e.g.: Corn demand has an intercept of 100 and slope of -2, and the corn supply has an intercept of 20 and slope of 3 and the supply intercept producer pays is 47.38 and the slope is 3 . The cleaned-up water demand has an intercept of 200 and slope of -4, and the cleaned-up water supply has an intercept of 64.38 and slope of 2.1. The hypothetical no-loading demand has an intercept of 200 and slope of -4 and the hypothetical no-loading supply has an intercept of 44.91 and slope of 2.1.'.")
 
 user_query = st.text_area("Type your question here:", "")
 
- 
+
 
 if st.button("Solve"):
 
     params = extract_equation_params(user_query)
 
- 
+
 
     if params:
 
@@ -164,7 +163,7 @@ if st.button("Solve"):
 
         demand_intercept_no_loading, demand_slope_no_loading, supply_intercept_no_loading, supply_slope_no_loading = params
 
- 
+
 
         # Compute Equilibria for Water
 
@@ -172,13 +171,13 @@ if st.button("Solve"):
 
             calculate_equilibrium(demand_intercept_cleaned, demand_slope_cleaned, supply_intercept_cleaned, supply_slope_cleaned)
 
-       
+
 
         quantity_eq_no_loading, price_eq_no_loading, cs_eq_no_loading, ps_eq_no_loading, sw_eq_no_loading = \
 
             calculate_equilibrium(demand_intercept_no_loading, demand_slope_no_loading, supply_intercept_no_loading, supply_slope_no_loading)
 
-       
+
 
         # Compute Equilibria for Corn
 
@@ -186,13 +185,13 @@ if st.button("Solve"):
 
             calculate_equilibrium(demand_intercept_corn, demand_slope_corn, supply_intercept_corn, supply_slope_corn)
 
-       
+
 
         quantity_eq_corn_prod_pay, price_eq_corn_prod_pay, cs_eq_corn_prod_pay, ps_eq_corn_prod_pay, sw_eq_corn_prod_pay = \
 
             calculate_equilibrium(demand_intercept_corn, demand_slope_corn, supply_intercept_prod_pay, supply_slope_prod_pay)
 
-       
+
 
         # Display Equilibrium Prices and Quantities
 
@@ -206,7 +205,7 @@ if st.button("Solve"):
 
         st.write(f"- **No-Loading Water Market:** Price: ${price_eq_no_loading}, Quantity: {quantity_eq_no_loading} units")
 
-       
+
 
         # Display Surplus Tables for Corn
 
@@ -224,7 +223,7 @@ if st.button("Solve"):
 
         st.table(surplus_corn)
 
-       
+
 
         # Plot Graphs for Corn
 
@@ -232,7 +231,7 @@ if st.button("Solve"):
 
                     quantity_eq_corn, price_eq_corn, "Corn Market", supply_intercept_prod_pay, supply_slope_prod_pay)
 
-       
+
 
         # Display Surplus Tables for Water
 
@@ -250,7 +249,7 @@ if st.button("Solve"):
 
         st.table(surplus_water)
 
-       
+
 
         # Plot Graphs for Water
 
