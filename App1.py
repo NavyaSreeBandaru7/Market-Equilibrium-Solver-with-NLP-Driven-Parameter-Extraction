@@ -36,9 +36,9 @@ def extract_equation_params(text):
 
  
 
-    demand_intercept_corn, demand_slope_corn, supply_intercept_corn, supply_slope_corn, \
+    demand_intercept_corn, demand_slope_corn, supply_intercept_corn, supply_slope_corn, 
 
-    supply_intercept_prod_pay, supply_slope_prod_pay, \
+    supply_intercept_prod_pay, supply_slope_prod_pay, 
 
     demand_intercept_cleaned, demand_slope_cleaned, supply_intercept_cleaned, supply_slope_cleaned, \
 
