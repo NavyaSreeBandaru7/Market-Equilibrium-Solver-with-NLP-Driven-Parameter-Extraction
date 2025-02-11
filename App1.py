@@ -1,4 +1,4 @@
-import streamlit as st 
+import streamlit as st
 
 import numpy as np
 
@@ -256,4 +256,4 @@ if st.button("Solve"):
 
         plot_market(demand_intercept_cleaned, demand_slope_cleaned, supply_intercept_cleaned, supply_slope_cleaned,
 
-                    quantity_eq_cleaned, price_eq_cleaned, "Water Market", supply_intercept_no_loading, supply_slope_no_loading
+                    quantity_eq_cleaned, price_eq_cleaned, "Water Market", supply_intercept_no_loading, supply_slope_no_loading)
